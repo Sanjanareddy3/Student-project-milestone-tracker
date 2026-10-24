@@ -14,12 +14,12 @@ Run `task-1/student_milestone_tracker.html` in a browser, click **Run 5 test sce
 
 ## Run details
 
-- Date/time run:
-- Browser/version:
-- Test runner output:
-- Any failed or unexpected behavior:
-- Corrective change made (if any):
-- Retest result:
+Date/time run: 24 October 2026, approximately 2:22 PM IST
+Browser/version: Google Chrome on Windows
+Test runner output: Manual browser testing; no automated test runner used.
+Any failed or unexpected behavior: None observed.
+Corrective change made (if any): None.
+Retest result: Not retested.
 
 ## Limitations
 
