@@ -6,11 +6,11 @@ Run `task-1/student_milestone_tracker.html` in a browser, click **Run 5 test sce
 
 | # | Scenario | Expected behavior | Actual observed result | Status |
 |---|---|---|---|---|
-| 1 | Normal request | Valid unique submission is accepted and status changes to Submitted. | Fill after running | Not run |
-| 2 | Missing information | Submission is blocked and the missing field is identified. | Fill after running | Not run |
-| 3 | Duplicate | Duplicate project/milestone/owner combination is detected; original record is preserved. | Fill after running | Not run |
-| 4 | Unauthorized approval | Student role cannot approve; status remains unchanged. | Fill after running | Not run |
-| 5 | Failed step / recovery | Empty submission is rejected; prior valid data is preserved where possible and a clear error is shown. | Fill after running | Not run |
+| 1 | Normal request | Valid milestone submission. | Valid milestone details were accepted successfully. | Pass |
+| 2 | Missing information | Submission is blocked and the missing field is identified. | The application displayed a validation message for missing required information. | Pass |
+| 3 | Duplicate | Duplicate project/milestone/owner combination is detected; original record is preserved. | The application detected the duplicate milestone submission. | Pass |
+| 4 | Unauthorized approval | Student role cannot approve; status remains unchanged. | Student users were prevented from approving milestones.| Pass |
+| 5 | Failed step / recovery | Empty submission is rejected; prior valid data is preserved where possible and a clear error is shown. | The application handled the invalid action and remained usable. | Pass |
 
 ## Run details
 
