@@ -1,54 +1,62 @@
-# AI-Assisted Learning Exercise Log
+# AI Exercise Log
 
-## Objective
+## Purpose
 
-Evaluate how AI tools can support learning in five computer science subjects. Each exercise records the prompt, an illustrative output, a verification method, and corrections or limitations.
+This log documents five AI-assisted exercises covering core Computer Science subjects. Each exercise includes the problem, solution, expected result, and key learning.
 
-**Status:** Planned examples — complete the verification checks before marking these exercises as completed.
+## Exercise 1: Data Structures — Linear Search and Binary Search
 
-## Exercise 1: Data Structures and Algorithms
+**Problem:** Find the number `40` in a sorted list using linear search and binary search.
 
-### Prompt
+**Code:**
 
-"Explain the time complexity of linear search and binary search. Provide a Python example of each and explain when binary search can be used."
+```python
+def linear_search(arr, target):
+    for i in range(len(arr)):
+        if arr[i] == target:
+            return i
+    return -1
 
-### Illustrative AI output
 
-- Linear search checks elements one by one and takes O(n) time in the worst case.
-- Binary search repeatedly halves the search interval and takes O(log n) time.
-- Binary search requires sorted data.
+def binary_search(arr, target):
+    low = 0
+    high = len(arr) - 1
 
-### Verification
+    while low <= high:
+        mid = (low + high) // 2
 
-1. Run both implementations on the same test array.
-2. Test successful and unsuccessful searches.
-3. Check the time-complexity claims against the algorithm logic and a trusted algorithms textbook or course resource.
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            low = mid + 1
+        else:
+            high = mid - 1
 
-### Correction and learning
+    return -1
 
-Binary search must not be applied directly to an unsorted array unless the data is sorted first or another suitable strategy is used. Sorting also has a cost that may matter in a real application.
 
-### Status
+numbers = [10, 20, 30, 40, 50]
 
-Pending practical verification.
-
----
-
-## Exercise 2: Database Management Systems
-
-### Prompt
-
-"Write an SQL query to calculate the average salary in each department using an employees table with department_id and salary columns. Explain GROUP BY and HAVING."
-
-### Illustrative AI output
-
-```sql
-SELECT department_id, AVG(salary) AS average_salary
-FROM employees
-GROUP BY department_id;
+print("Linear Search:", linear_search(numbers, 40))
+print("Binary Search:", binary_search(numbers, 40))
 ```
 
-To display only departments with an average salary greater than 50000:
+**Expected output:**
+
+```text
+Linear Search: 3
+Binary Search: 3
+```
+
+**Result:** Both algorithms are designed to return index `3` for the target value `40`.
+
+**Learning:** Linear search checks elements sequentially. Binary search repeatedly halves the search range and requires sorted input.
+
+## Exercise 2: DBMS — Aggregate Functions and HAVING
+
+**Problem:** Calculate the average salary in each department and display only departments with an average salary greater than 50,000.
+
+**SQL query:**
 
 ```sql
 SELECT department_id, AVG(salary) AS average_salary
@@ -57,125 +65,71 @@ GROUP BY department_id
 HAVING AVG(salary) > 50000;
 ```
 
-### Verification
+**Expected result:** The query returns departments whose average salary exceeds 50,000, provided the table and columns exist.
 
-1. Run the queries in a database containing sample employee records.
-2. Calculate one department's average manually.
-3. Confirm that HAVING filters grouped results, while WHERE filters rows before grouping.
+**Result:** The query uses `GROUP BY` to group employees by department, `AVG()` to calculate the average, and `HAVING` to filter grouped results.
 
-### Correction and learning
+**Learning:** `WHERE` filters individual rows before grouping, while `HAVING` filters groups after aggregation.
 
-The example assumes the table and column names exist and that salary values use a suitable numeric type. Departments with no employee records will not appear in this result.
+## Exercise 3: AI/ML — Understanding Overfitting
 
-### Status
+**Problem:** Explain overfitting and identify methods to reduce it.
 
-Pending database execution.
+**Solution:** Overfitting occurs when a model learns the training data too closely, including noise and unimportant patterns. It performs well on training data but poorly on unseen data.
 
----
+**Methods to reduce overfitting:**
+1. Use more representative training data.
+2. Apply regularization.
+3. Use dropout in suitable neural networks.
+4. Reduce model complexity.
+5. Apply cross-validation.
+6. Use early stopping when appropriate.
 
-## Exercise 3: Artificial Intelligence and Machine Learning
+**Result:** The explanation distinguishes training performance from generalization and identifies common techniques to reduce overfitting.
 
-### Prompt
+**Learning:** A good machine learning model should perform well on unseen data rather than simply memorize training examples.
 
-"Explain overfitting in machine learning and suggest three methods to reduce it. Give a simple example."
+## Exercise 4: Operating Systems — Process vs Thread
 
-### Illustrative AI output
+**Problem:** Explain the difference between a process and a thread.
 
-Overfitting occurs when a model learns the training data too closely, including noise, and performs poorly on unseen data.
-
-Possible methods to reduce overfitting include:
-1. Regularization.
-2. Cross-validation and appropriate model selection.
-3. Early stopping or collecting more representative training data.
-
-### Verification
-
-1. Consult a trusted machine-learning textbook or course resource.
-2. Train a simple model and compare training performance with validation performance.
-3. Check that validation data is not used to fit the model's parameters.
-
-### Correction and learning
-
-A large gap between training and validation performance can indicate overfitting, but it is not conclusive by itself. Data leakage, distribution differences, and other issues should also be considered.
-
-### Status
-
-Pending practical experiment.
-
----
-
-## Exercise 4: Operating Systems
-
-### Prompt
-
-"Explain the difference between a process and a thread. Give one example of each and describe one advantage of multithreading."
-
-### Illustrative AI output
-
-- A process is a running program with its own process-level resources and address space.
-- A thread is an execution unit within a process. Threads in the same process typically share its address space.
-- Multithreading can improve responsiveness and allow concurrent work.
-
-### Verification
-
-1. Compare the definitions with the operating-systems textbook or course notes.
-2. Use a simple multithreaded program to observe concurrent execution.
-3. Check the program's output and distinguish concurrency from guaranteed parallel execution.
-
-### Correction and learning
-
-Multithreading does not automatically make every program faster. Shared data may require synchronization, and threads can introduce race conditions.
-
-### Status
-
-Pending practical verification.
-
----
-
-## Exercise 5: Software Engineering and Testing
-
-### Prompt
-
-"Suggest test cases for a student project milestone tracker that accepts milestone submissions and allows authorized users to approve them."
-
-### Illustrative AI output
-
-| Test case | Expected result |
+| Process | Thread |
 |---|---|
-| Submit a valid milestone | Submission is accepted |
-| Submit without a required field | Validation error is displayed |
-| Submit a duplicate milestone | Duplicate is rejected or handled according to defined rules |
-| Approve as an unauthorized user | Approval is denied |
-| Recover from a simulated error | A useful error message is shown and the application remains usable where possible |
+| A program in execution with its own address space and resources. | An execution unit within a process. |
+| Processes generally have separate address spaces. | Threads in the same process share memory and many resources. |
+| Communication often requires inter-process communication mechanisms. | Threads can communicate through shared memory. |
+| Process management may involve greater overhead. | Thread management can involve lower overhead, depending on the system. |
 
-### Verification
+**Result:** Processes provide isolation, while threads allow concurrent execution within a process and can share resources.
 
-1. Execute each test against the actual milestone tracker.
-2. Record the observed result and compare it with the expected result.
-3. Investigate any mismatch and retest after a correction.
-4. Distinguish interface-demo behavior from real authentication and server-side enforcement.
+**Learning:** Shared memory between threads requires appropriate synchronization to prevent race conditions.
 
-### Correction and learning
+## Exercise 5: Software Engineering and Testing — Milestone Tracker
 
-A role selector in a front-end prototype is not secure authentication. A production application must enforce permissions on the server or another trusted backend.
+**Problem:** Define test cases for a student project milestone tracker.
 
-### Status
+| Test case | Input or action | Expected result |
+|---|---|---|
+| Valid submission | Enter all required fields | Submission is accepted |
+| Missing information | Leave a required field empty | Submission is rejected with a clear message |
+| Duplicate submission | Submit the same milestone details again | Duplicate is detected according to defined rules |
+| Unauthorized approval | A student attempts to approve a milestone | Approval is denied |
+| Error recovery | Submit empty replacement content | Invalid content is rejected and existing valid content is preserved |
 
-Pending execution against the prototype.
+**Result:** These test cases define expected behavior for validation, duplicate detection, authorization, and error recovery.
 
----
+**Learning:** Testing helps identify defects and check whether the software behaves according to its requirements. A browser role selector alone does not provide production-level security.
 
-## Overall Reflection
+## Overall Summary
 
-AI can help explain concepts, generate starter code, and suggest test cases. However, its responses can contain errors, omit assumptions, or overlook security issues.
+The five exercises demonstrate how AI assistance can support learning in Data Structures, DBMS, AI/ML, Operating Systems, and Software Engineering.
 
-For reliable use:
-- Verify code by executing it.
-- Check explanations against trusted learning resources.
-- Record actual results rather than assumed results.
-- Document corrections and limitations.
-- Do not treat an AI-generated answer as evidence that a system works.
+The exercises provide examples of algorithm implementation, SQL queries, conceptual explanations, and software test design. Code outputs and prototype behavior should be confirmed in the relevant environment before being reported as executed tests.
 
-## Evidence to Add
+## Limitations
 
-For each exercise, retain the actual prompt and response, a screenshot or output from the verification process, and any correction made. Update each status only after the corresponding checks have been completed.
+- The examples are educational and may require adaptation to the available environment.
+- SQL output depends on the data stored in the database.
+- AI-generated explanations should be reviewed for technical accuracy.
+- Expected results describe intended behavior and are not, by themselves, evidence of execution.
+ checks have been completed.
