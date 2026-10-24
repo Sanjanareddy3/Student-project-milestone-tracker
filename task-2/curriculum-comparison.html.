@@ -1,0 +1,217 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSE Curriculum — 2030 Readiness</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #f4f6f8;
+    color: #202938;
+  }
+  h1, h2 { color: #193b63; }
+  .panel {
+    background: white;
+    padding: 20px;
+    margin: 16px 0;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px #00000012;
+  }
+  label { font-weight: bold; }
+  select, button {
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 5px;
+    border: 1px solid #aab5c2;
+    font-size: 15px;
+  }
+  button {
+    background: #193b63;
+    color: white;
+    cursor: pointer;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    background: white;
+  }
+  th, td {
+    border: 1px solid #d7dde5;
+    padding: 11px;
+    text-align: left;
+  }
+  th { background: #e5edf6; }
+  .status { font-weight: bold; }
+  .note { color: #505c6b; font-size: 14px; line-height: 1.6; }
+  .tag {
+    display: inline-block;
+    background: #e5edf6;
+    padding: 5px 9px;
+    border-radius: 5px;
+    margin: 3px;
+  }
+  @media(max-width:600px) {
+    body { padding: 10px; }
+    th, td { padding: 7px; font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<h1>CSE Curriculum: 2030 Readiness</h1>
+<p>
+  <strong>Program:</strong> B.Tech Computer Science & Engineering<br>
+  <strong>University:</strong> IFHE Hyderabad<br>
+  <strong>Admission batch:</strong> 2023–2027
+</p>
+
+<div class="panel">
+  <h2>Curriculum Comparison</h2>
+  <label for="semester">Select semester:</label><br>
+  <select id="semester" onchange="showSemester()">
+    <option value="3">Semester III</option>
+    <option value="4">Semester IV</option>
+    <option value="5">Semester V</option>
+    <option value="6">Semester VI</option>
+  </select>
+
+  <p class="note">
+    Course details below are a preliminary transcription of the
+    published IFHE CSE structure and supplied screenshots. They are
+    not yet verified against the original 2023-entry curriculum.
+    The proposed improvements are recommendations, not official changes.
+  </p>
+
+  <div id="comparison"></div>
+</div>
+
+<div class="panel">
+  <h2>Audit Categories</h2>
+  <span class="tag">KEEP — retain foundations</span>
+  <span class="tag">UPDATE — modernize practical work</span>
+  <span class="tag">REDUCE — only if overlap is verified</span>
+  <span class="tag">ADD — consider missing learning outcomes</span>
+</div>
+
+<div class="panel">
+  <h2>Key Recommendations</h2>
+  <ul>
+    <li>Strengthen Python, SQL, Git, debugging, and collaborative coding.</li>
+    <li>Add practical data-pipeline and data-quality exercises.</li>
+    <li>Include model evaluation and responsible AI practices.</li>
+    <li>Strengthen automated testing and secure development.</li>
+    <li>Use project-based learning to connect theory with practice.</li>
+  </ul>
+  <p class="note">
+    These recommendations are informed by selected employer postings
+    and computing curriculum references. Detailed syllabi must be
+    reviewed before confirming gaps or changing credits.
+  </p>
+</div>
+
+<div class="panel">
+  <h2>Credit Policy</h2>
+  <p>
+    Original credits must remain unchanged in the baseline.
+    Proposed credits should only be entered after all courses and
+    semester totals have been verified for the 2023 admission batch.
+    No credit changes are approved or assumed by this demo.
+  </p>
+  <p>
+    Official reference:
+    <a href="https://www.ifheindia.org/icfai-tech-school-hyderabad/icfaitech-btech-program-structure"
+       target="_blank" rel="noopener noreferrer">
+      IFHE B.Tech Program Structure
+    </a>
+  </p>
+</div>
+
+<script>
+const courses = {
+  3: [
+    ["Object Oriented Programming Concepts", 4, "UPDATE",
+     "Add Git workflows, debugging and code-review exercises."],
+    ["Design and Analysis of Algorithms", 3, "KEEP",
+     "Retain algorithmic reasoning and complexity analysis."],
+    ["Operating Systems", 4, "KEEP",
+     "Retain process, memory and system fundamentals."],
+    ["Theory of Computation", 3, "KEEP",
+     "Retain formal languages and computational foundations."]
+  ],
+  4: [
+    ["Database Management System", null, "UPDATE",
+     "Strengthen SQL, query optimization and data-quality practice."],
+    ["Artificial Intelligence", 3, "UPDATE",
+     "Add model evaluation and responsible AI exercises."],
+    ["Computer Organization and Architecture", 3, "KEEP",
+     "Retain computer systems foundations."],
+    ["Discrete Mathematics", 3, "KEEP",
+     "Retain mathematical foundations for computing."],
+    ["Web Enabled Technologies", 4, "UPDATE",
+     "Strengthen secure application development and API practice."],
+    ["Industry Coding Practices", 4, "UPDATE",
+     "Practice Git, code review and collaborative development."]
+  ],
+  5: [
+    ["Principles of Cryptography", 3, "KEEP",
+     "Retain security and cryptographic foundations."],
+    ["Computer Networks", 4, "KEEP",
+     "Retain networking fundamentals."],
+    ["Programming Language and Compiler Construction", 3, "KEEP",
+     "Retain programming-language and compiler foundations."],
+    ["Machine Learning", 4, "UPDATE",
+     "Strengthen validation, experiment tracking and deployment."],
+    ["Software Engineering", 3, "UPDATE",
+     "Add practical project planning and maintainability checks."]
+  ],
+  6: [
+    ["Special Project", 3, "UPDATE",
+     "Build and test an end-to-end project."],
+    ["Computer Vision", 3, "UPDATE",
+     "Strengthen evaluation and practical model experiments."],
+    ["Big Data Systems", 3, "UPDATE",
+     "Add ETL/ELT and data-quality pipeline exercises."],
+    ["Cloud Computing", 4, "UPDATE",
+     "Practice deployment, monitoring and access control."],
+    ["Software Testing", 3, "UPDATE",
+     "Practice automated unit and integration testing."]
+  ]
+};
+
+function showSemester() {
+  const semester = document.getElementById("semester").value;
+  const selectedCourses = courses[semester];
+  let html = "<table><thead><tr>" +
+    "<th>Course</th><th>Credits</th><th>Audit</th>" +
+    "<th>Proposed improvement</th></tr></thead><tbody>";
+
+  selectedCourses.forEach(course => {
+    const credit = course[1] === null
+      ? "Verify 2023 version"
+      : course[1];
+
+    html += "<tr><td>" + course[0] + "</td>" +
+      "<td>" + credit + "</td>" +
+      '<td class="status">' + course[2] + "</td>" +
+      "<td>" + course[3] + "</td></tr>";
+  });
+
+  html += "</tbody></table>";
+  html += '<p class="note">Credit values are provisional until checked ' +
+    "against the applicable 2023 curriculum. Proposed improvements " +
+    "do not change credits.</p>";
+
+  document.getElementById("comparison").innerHTML = html;
+}
+
+showSemester();
+</script>
+
+</body>
+</html>
