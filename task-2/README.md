@@ -55,3 +55,14 @@ Recommendations will distinguish verified facts from proposed changes and assump
 ## 7. Status
 
 **In progress:** Establishing the curriculum baseline and collecting evidence.
+
+## 8. Interactive Curriculum Comparison
+
+The interactive webpage presents selected CSE courses, preliminary credit information, KEEP/UPDATE recommendations, and proposed improvements for curriculum readiness toward 2030.
+
+**Live webpage:** https://sanjanareddy3.github.io/Student-project-milestone-tracker/task-2/curriculum-comparison.html
+
+**Source file:** `curriculum-comparison.html`
+
+**Note:** The course and credit information remains provisional until verified against the curriculum applicable to the 2023 admission batch. Proposed improvements are recommendations, not official curriculum changes.
+
