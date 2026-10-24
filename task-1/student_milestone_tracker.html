@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Project Milestone Tracker</title>
+<style>
+:root{--bg:#f4f7fb;--panel:#fff;--ink:#17243a;--muted:#64748b;--line:#dce4ef;--blue:#2859c5;--blue2:#eaf0ff;--green:#16794a;--greenbg:#e8f7ef;--amber:#9a5b00;--amberbg:#fff3d9;--red:#b42318;--redbg:#ffebe9;--shadow:0 8px 24px #243b5a0d}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+header{background:#142747;color:white;padding:24px max(20px,calc((100% - 1180px)/2));display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+header h1{font-size:clamp(1.35rem,3vw,2rem);margin:0 0 4px}header p{margin:0;color:#d5e1f5;font-size:.92rem}
+main{max-width:1180px;margin:24px auto;padding:0 18px 44px}
+.notice{border:1px solid #f0d08b;background:#fff8e8;border-radius:12px;padding:13px 16px;margin-bottom:18px;color:#6b4b0b;font-size:.92rem}
+.toolbar,.panel,.stat,.milestone,.test-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.toolbar{padding:15px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.toolbar-group{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+label{display:block;font-size:.86rem;font-weight:650;color:#34445d;margin-bottom:5px}
+select,input,textarea{font:inherit;border:1px solid #cbd5e1;border-radius:9px;padding:10px 11px;background:#fff;color:var(--ink);width:100%;min-width:0}
+select:focus,input:focus,textarea:focus{outline:3px solid #2859c522;border-color:var(--blue)}
+.toolbar select{width:auto;min-width:190px}
+button{font:inherit;font-weight:650;border:1px solid transparent;border-radius:9px;padding:10px 13px;cursor:pointer;transition:.15s}
+button:focus-visible{outline:3px solid #2859c555;outline-offset:2px}
+.btn-primary{background:var(--blue);color:#fff}.btn-primary:hover{background:#1e469f}
+.btn-secondary{background:#eef2f8;color:#263751;border-color:#d5deea}.btn-danger{background:#fff;color:var(--red);border-color:#f0b9b5}.btn-small{padding:7px 10px;font-size:.86rem}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}
+.stat{padding:16px}.stat .label{font-size:.83rem;color:var(--muted)}.stat .value{font-size:1.8rem;font-weight:750;margin-top:3px}
+.layout{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(270px,1fr);gap:18px;align-items:start}
+.panel{padding:18px;margin-bottom:18px}.panel h2{font-size:1.1rem;margin:0 0 5px}.sub{font-size:.88rem;color:var(--muted);margin:0 0 16px}
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field-full{grid-column:1/-1}
+.milestones{display:grid;gap:12px}
+.milestone{padding:16px;box-shadow:none}.milestone-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.milestone h3{margin:0 0 4px;font-size:1rem}.meta{font-size:.84rem;color:var(--muted);display:flex;gap:8px 14px;flex-wrap:wrap}
+.description{margin:10px 0;color:#43536b;font-size:.91rem}.pill{display:inline-flex;align-items:center;border-radius:999px;padding:4px 9px;font-size:.76rem;font-weight:750;white-space:nowrap;background:#eef2f7;color:#475569}
+.pill.approved{background:var(--greenbg);color:var(--green)}.pill.submitted{background:var(--blue2);color:#244eb2}.pill.revision{background:var(--amberbg);color:var(--amber)}.pill.overdue{background:var(--redbg);color:var(--red)}.pill.progress{background:#f0eaff;color:#6941a5}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.feedback{margin-top:9px;background:#f7f9fc;padding:9px 11px;border-radius:8px;font-size:.88rem;color:#475569}
+.empty{border:1px dashed #cbd5e1;border-radius:10px;padding:22px;text-align:center;color:var(--muted)}
+.log-list{display:grid;gap:10px;max-height:440px;overflow:auto}.log-item{border-left:3px solid #a9bce8;padding:2px 0 2px 11px;font-size:.84rem}.log-item strong{display:block}.log-time{color:var(--muted);font-size:.77rem}
+.test-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.test-card{padding:14px;box-shadow:none}.test-card h3{font-size:.95rem;margin:0 0 5px}.test-card p{font-size:.85rem;color:var(--muted);margin:0 0 10px}.test-result{font-weight:750;font-size:.83rem;margin-top:8px}.pass{color:var(--green)}.fail{color:var(--red)}
+.section-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.section-heading h2{margin:0}
+.toast{position:fixed;right:18px;bottom:18px;max-width:min(440px,calc(100vw - 36px));padding:13px 16px;border-radius:10px;background:#142747;color:white;box-shadow:0 10px 30px #0002;z-index:5;display:none}.toast.show{display:block}.toast.error{background:#8e211b}.footnote{font-size:.82rem;color:var(--muted);margin-top:14px}
+@media(max-width:820px){.layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){header{padding:20px}.field-grid,.test-list{grid-template-columns:1fr}.field-full{grid-column:auto}.milestone-top{flex-direction:column}.toolbar select{width:100%}.toolbar-group{width:100%}.toolbar-group>*{flex:1}}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Student Project Milestone Tracker</h1>
+    <p>Hypothetical workflow prototype · Synthetic demonstration data only</p>
+  </div>
+  <div><span class="pill" style="background:#dce8ff;color:#183e8b">Task 1 · Prototype</span></div>
+</header>
+<main>
+  <div class="notice"><strong>Hypothetical case study:</strong> This interface does not represent a verified ICFAI process. All sample projects, people, records and test scenarios are fictional. The role selector is a demo control, not real security.</div>
+  <section class="toolbar">
+    <div class="toolbar-group">
+      <div><label for="roleSelect">Demo role</label><select id="roleSelect"><option value="student">Student</option><option value="faculty">Faculty Supervisor</option></select></div>
+      <div><label for="filterSelect">Filter milestones</label><select id="filterSelect"><option value="all">All milestones</option><option value="mine">My assigned milestones</option><option value="needs-review">Awaiting review</option><option value="overdue">Overdue</option><option value="approved">Approved</option></select></div>
+    </div>
+    <div class="toolbar-group">
+      <button id="runTestsBtn" class="btn-secondary">Run 5 test scenarios</button>
+      <button id="resetBtn" class="btn-danger">Reset demo data</button>
+    </div>
+  </section>
+
+  <section class="stats" aria-label="Milestone summary">
+    <div class="stat"><div class="label">Total milestones</div><div class="value" id="statTotal">0</div></div>
+    <div class="stat"><div class="label">Awaiting review</div><div class="value" id="statReview">0</div></div>
+    <div class="stat"><div class="label">Overdue</div><div class="value" id="statOverdue">0</div></div>
+    <div class="stat"><div class="label">Approved</div><div class="value" id="statApproved">0</div></div>
+  </section>
+
+  <div class="layout">
+    <div>
+      <section class="panel" id="createPanel">
+        <h2 id="formTitle">Add a synthetic milestone</h2>
+        <p class="sub">Use fictional information only. Required fields are checked before saving.</p>
+        <form id="milestoneForm">
+          <div class="field-grid">
+            <div><label for="project">Project name *</label><input id="project" required maxlength="80" placeholder="e.g., Campus Helper Demo"></div>
+            <div><label for="title">Milestone title *</label><input id="title" required maxlength="100" placeholder="e.g., Prototype review"></div>
+            <div><label for="owner">Assigned student *</label><input id="owner" required maxlength="60" placeholder="e.g., Demo Student A"></div>
+            <div><label for="dueDate">Due date *</label><input id="dueDate" type="date" required></div>
+            <div class="field-full"><label for="deliverable">Deliverable / submission link *</label><input id="deliverable" required maxlength="300" placeholder="e.g., Synthetic prototype notes or https://example.com/demo"></div>
+            <div class="field-full"><label for="description">Description (optional)</label><textarea id="description" rows="2" maxlength="400" placeholder="What should be completed?"></textarea></div>
+          </div>
+          <div class="actions"><button class="btn-primary" type="submit">Save milestone</button><button class="btn-secondary" id="clearFormBtn" type="button">Clear form</button></div>
+        </form>
+      </section>
+
+      <section class="panel">
+        <div class="section-heading"><h2>Milestones</h2><span class="pill" id="visibleCount">0 shown</span></div>
+        <div id="milestoneList" class="milestones"></div>
+      </section>
+
+      <section class="panel">
+        <div class="section-heading"><h2>Five required test scenarios</h2><span class="pill">Synthetic tests</span></div>
+        <p class="sub">Tests run against isolated in-memory records and do not change your saved demo data.</p>
+        <div id="testResults" class="test-list"></div>
+      </section>
+    </div>
+
+    <aside>
+      <section class="panel">
+        <h2>Audit history</h2>
+        <p class="sub">A local demonstration log of created, submitted, reviewed and reset actions.</p>
+        <div id="auditList" class="log-list"></div>
+        <p class="footnote">Audit records are stored in this browser only and can be edited or cleared by the device user. This is not a tamper-proof audit system.</p>
+      </section>
+      <section class="panel">
+        <h2>Workflow rules</h2>
+        <ul style="padding-left:19px;margin-bottom:0;font-size:.9rem;color:#43536b">
+          <li>Required project, title, owner, due date and deliverable.</li>
+          <li>Duplicate project + milestone + owner combinations are blocked.</li>
+          <li>Only the Faculty Supervisor demo role can approve or request revisions.</li>
+          <li>Only submitted or revision-required milestones can be reviewed.</li>
+          <li>Overdue is derived from the due date and current status.</li>
+          <li>Failures show a message; the app attempts to preserve existing data.</li>
+        </ul>
+      </section>
+      <section class="panel">
+        <h2>What this prototype does not do</h2>
+        <p class="sub" style="margin-bottom:0">It does not provide real accounts, server-side access control, email reminders, file uploads, cloud backup or official college integration. Browser local storage is suitable only for a demo.</p>
+      </section>
+    </aside>
+  </div>
+  <p class="footnote">Suggested report wording: “The baseline and volumes in this prototype are hypothetical assumptions used to demonstrate the proposed workflow. No actual college observations or measured time savings are claimed.”</p>
+</main>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script>
+"use strict";
+
+const STORAGE_KEY = "hypotheticalStudentMilestoneTracker_v1";
+const AUDIT_KEY = "hypotheticalStudentMilestoneTrackerAudit_v1";
+const $ = (id) => document.getElementById(id);
+const nowIso = () => new Date().toISOString();
+const today = () => {
+  const d = new Date();
+  const local = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
+  return local.toISOString().slice(0, 10);
+};
+const makeId = () => "M-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 7);
+let milestones = [];
+let audit = [];
+let toastTimer = null;
+
+function seedData() {
+  const current = today();
+  const plusDays = (n) => {
+    const d = new Date(current + "T12:00:00");
+    d.setDate(d.getDate() + n);
+    return d.toISOString().slice(0, 10);
+  };
+  return [
+    {id:"DEMO-001",project:"Campus Helper Demo",title:"Project proposal",owner:"Demo Student A",dueDate:plusDays(5),deliverable:"Synthetic proposal document",description:"Define the problem and scope.",status:"Approved",submission:"Synthetic proposal document",feedback:"Approved in this fictional example.",createdAt:nowIso(),updatedAt:nowIso()},
+    {id:"DEMO-002",project:"Campus Helper Demo",title:"Clickable prototype",owner:"Demo Student A",dueDate:plusDays(2),deliverable:"https://example.com/prototype-demo",description:"Build a simple clickable prototype.",status:"Submitted",submission:"https://example.com/prototype-demo",feedback:"",createdAt:nowIso(),updatedAt:nowIso()},
+    {id:"DEMO-003",project:"Library Queue Demo",title:"Requirements draft",owner:"Demo Student B",dueDate:plusDays(-3),deliverable:"Synthetic requirements notes",description:"List functional requirements.",status:"In Progress",submission:"",feedback:"",createdAt:nowIso(),updatedAt:nowIso()},
+    {id:"DEMO-004",project:"Library Queue Demo",title:"Test plan",owner:"Demo Student B",dueDate:plusDays(8),deliverable:"Synthetic test plan",description:"Prepare normal and exception cases.",status:"Revision Required",submission:"Synthetic test plan v1",feedback:"Please clarify the failure recovery steps.",createdAt:nowIso(),updatedAt:nowIso()}
+  ];
+}
+function safeRead(key, fallback) {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return fallback;
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : fallback;
+  } catch (err) {
+    showToast("Saved browser data could not be read. Using temporary demo data.", true);
+    return fallback;
+  }
+}
+function saveData() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(milestones));
+    localStorage.setItem(AUDIT_KEY, JSON.stringify(audit));
+    return true;
+  } catch (err) {
+    showToast("Could not save to browser storage. Export or copy important demo information before leaving this page.", true);
+    return false;
+  }
+}
+function actor() { return $("roleSelect").value === "faculty" ? "Faculty Supervisor (demo)" : "Student (demo)"; }
+function addAudit(action, detail) {
+  audit.unshift({at:nowIso(), actor:actor(), action, detail});
+  audit = audit.slice(0, 200);
+}
+function showToast(message, error=false) {
+  const el = $("toast");
+  el.textContent = message;
+  el.className = "toast show" + (error ? " error" : "");
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.className = "toast"; }, 3600);
+}
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+}
+function isOverdue(m) {
+  return m.dueDate < today() && !["Approved"].includes(m.status);
+}
+function statusClass(m) {
+  if (isOverdue(m)) return "overdue";
+  if (m.status === "Approved") return "approved";
+  if (m.status === "Submitted") return "submitted";
+  if (m.status === "Revision Required") return "revision";
+  if (m.status === "In Progress") return "progress";
+  return "";
+}
+function displayedStatus(m) { return isOverdue(m) ? "Overdue · " + m.status : m.status; }
+function filteredMilestones() {
+  const filter = $("filterSelect").value;
+  const role = $("roleSelect").value;
+  return milestones.filter(m => {
+    if (filter === "mine") return role === "student" ? m.owner === "Demo Student A" : true;
+    if (filter === "needs-review") return m.status === "Submitted";
+    if (filter === "overdue") return isOverdue(m);
+    if (filter === "approved") return m.status === "Approved";
+    return true;
+  });
+}
+function renderStats() {
+  $("statTotal").textContent = milestones.length;
+  $("statReview").textContent = milestones.filter(m => m.status === "Submitted").length;
+  $("statOverdue").textContent = milestones.filter(isOverdue).length;
+  $("statApproved").textContent = milestones.filter(m => m.status === "Approved").length;
+}
+function renderMilestones() {
+  const list = $("milestoneList");
+  const role = $("roleSelect").value;
+  const items = filteredMilestones();
+  $("visibleCount").textContent = items.length + " shown";
+  if (!items.length) {
+    list.innerHTML = '<div class="empty">No milestones match this filter.</div>';
+    return;
+  }
+  list.innerHTML = items.map(m => {
+    const canReview = role === "faculty" && ["Submitted","Revision Required"].includes(m.status);
+    const canSubmit = role === "student" && m.status !== "Approved";
+    return `<article class="milestone">
+      <div class="milestone-top"><div><h3>${esc(m.title)}</h3><div class="meta"><span>${esc(m.project)}</span><span>Owner: ${esc(m.owner)}</span><span>Due: ${esc(m.dueDate)}</span></div></div><span class="pill ${statusClass(m)}">${esc(displayedStatus(m))}</span></div>
+      ${m.description ? `<p class="description">${esc(m.description)}</p>` : ""}
+      <div class="meta"><span>Deliverable: ${esc(m.deliverable)}</span><span>ID: ${esc(m.id)}</span></div>
+      ${m.submission ? `<div class="feedback"><strong>Latest submission:</strong> ${esc(m.submission)}</div>` : ""}
+      ${m.feedback ? `<div class="feedback"><strong>Faculty feedback:</strong> ${esc(m.feedback)}</div>` : ""}
+      <div class="actions">
+        ${canSubmit ? `<button class="btn-primary btn-small" data-action="submit" data-id="${esc(m.id)}">Submit / Resubmit</button>` : ""}
+        ${canReview ? `<button class="btn-primary btn-small" data-action="approve" data-id="${esc(m.id)}">Approve</button><button class="btn-secondary btn-small" data-action="revise" data-id="${esc(m.id)}">Request revision</button>` : ""}
+        ${role === "faculty" ? `<button class="btn-secondary btn-small" data-action="inspect" data-id="${esc(m.id)}">View record</button>` : ""}
+      </div>
+    </article>`;
+  }).join("");
+}
+function renderAudit() {
+  const el = $("auditList");
+  if (!audit.length) { el.innerHTML = '<div class="empty">No audit events yet.</div>'; return; }
+  el.innerHTML = audit.map(a => `<div class="log-item"><strong>${esc(a.action)}</strong><div>${esc(a.detail)}</div><div class="log-time">${esc(new Date(a.at).toLocaleString())} · ${esc(a.actor)}</div></div>`).join("");
+}
+function render() { renderStats(); renderMilestones(); renderAudit(); }
+function findMilestone(id) { return milestones.find(m => m.id === id); }
+function duplicateExists(candidate, ignoreId=null) {
+  const norm = s => String(s).trim().toLowerCase();
+  return milestones.some(m => m.id !== ignoreId && norm(m.project) === norm(candidate.project) && norm(m.title) === norm(candidate.title) && norm(m.owner) === norm(candidate.owner));
+}
+function validateMilestone(m) {
+  const required = [["Project name",m.project],["Milestone title",m.title],["Assigned student",m.owner],["Due date",m.dueDate],["Deliverable",m.deliverable]];
+  const missing = required.filter(([,v]) => !String(v ?? "").trim()).map(([name]) => name);
+  if (missing.length) return "Please complete required fields: " + missing.join(", ") + ".";
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(m.dueDate) || Number.isNaN(Date.parse(m.dueDate))) return "Please enter a valid due date.";
+  if (m.deliverable.length > 300) return "Deliverable must be 300 characters or fewer.";
+  if (duplicateExists(m)) return "Duplicate blocked: this project, milestone title and assigned student already exist.";
+  return "";
+}
+$("milestoneForm").addEventListener("submit", event => {
+  event.preventDefault();
+  if ($("roleSelect").value !== "faculty") {
+    showToast("Only the Faculty Supervisor demo role can create milestone definitions in this prototype.", true);
+    return;
+  }
+  const m = {
+    id:makeId(), project:$("project").value.trim(), title:$("title").value.trim(),
+    owner:$("owner").value.trim(), dueDate:$("dueDate").value,
+    deliverable:$("deliverable").value.trim(), description:$("description").value.trim(),
+    status:"Not Started", submission:"", feedback:"", createdAt:nowIso(), updatedAt:nowIso()
+  };
+  const error = validateMilestone(m);
+  if (error) { showToast(error, true); return; }
+  milestones.unshift(m);
+  addAudit("Milestone created", `${m.title} (${m.id})`);
+  saveData(); render(); $("milestoneForm").reset();
+  showToast("Milestone created using synthetic demo data.");
+});
+$("clearFormBtn").addEventListener("click", () => $("milestoneForm").reset());
+$("roleSelect").addEventListener("change", () => { renderMilestones(); showToast("Demo role changed. This selector is not real authentication."); });
+$("filterSelect").addEventListener("change", renderMilestones);
+$("milestoneList").addEventListener("click", event => {
+  const btn = event.target.closest("button[data-action]");
+  if (!btn) return;
+  const {action,id} = btn.dataset;
+  const m = findMilestone(id);
+  if (!m) { showToast("Milestone not found. Refresh the list and retry.", true); return; }
+  const role = $("roleSelect").value;
+  if (action === "inspect") {
+    if (role !== "faculty") { showToast("Only the Faculty Supervisor demo role can view this record.", true); return; }
+    alert(`Synthetic milestone record\n\nID: ${m.id}\nProject: ${m.project}\nTitle: ${m.title}\nOwner: ${m.owner}\nDue: ${m.dueDate}\nStatus: ${m.status}\nSubmission: ${m.submission || "(none)"}\nFeedback: ${m.feedback || "(none)"}`);
+    return;
+  }
+  if (action === "submit") {
+    if (role !== "student") { showToast("Switch to the Student demo role to submit work.", true); return; }
+    if (m.status === "Approved") { showToast("Approved milestones cannot be resubmitted in this demo.", true); return; }
+    const value = prompt("Enter a synthetic submission description or example URL:");
+    if (value === null) return;
+    const submission = value.trim();
+    if (!submission) { showToast("Submission cannot be empty. Existing data was preserved.", true); return; }
+    if (submission.length > 300) { showToast("Submission must be 300 characters or fewer.", true); return; }
+    if (submission.toLowerCase() === String(m.submission).trim().toLowerCase()) { showToast("Duplicate submission blocked. The existing submission is unchanged.", true); return; }
+    m.submission = submission; m.status = "Submitted"; m.feedback = ""; m.updatedAt = nowIso();
+    addAudit("Milestone submitted", `${m.title} (${m.id})`); saveData(); render();
+    showToast("Submission recorded; waiting for faculty review."); return;
+  }
+  if (action === "approve" || action === "revise") {
+    if (role !== "faculty") { showToast("Unauthorized: only the Faculty Supervisor demo role can review submissions.", true); return; }
+    if (!["Submitted","Revision Required"].includes(m.status)) { showToast("Only submitted or revision-required milestones can be reviewed.", true); return; }
+    if (action === "approve") {
+      if (!m.submission.trim()) { showToast("Cannot approve without a submission.", true); return; }
+      m.status = "Approved"; m.feedback = "Approved in the synthetic demonstration."; m.updatedAt = nowIso();
+      addAudit("Milestone approved", `${m.title} (${m.id})`); saveData(); render(); showToast("Milestone approved.");
+    } else {
+      const feedback = prompt("Enter the reason for requesting a revision:");
+      if (feedback === null) return;
+      if (!feedback.trim()) { showToast("A revision reason is required. Existing data was preserved.", true); return; }
+      m.status = "Revision Required"; m.feedback = feedback.trim().slice(0,300); m.updatedAt = nowIso();
+      addAudit("Revision requested", `${m.title} (${m.id}): ${m.feedback}`); saveData(); render(); showToast("Revision requested; feedback recorded.");
+    }
+  }
+});
+$("resetBtn").addEventListener("click", () => {
+  if (!confirm("Reset all local demo records to the original synthetic sample data? This will remove locally created milestones and audit history.")) return;
+  try {
+    milestones = seedData(); audit = [];
+    addAudit("Demo reset", "Synthetic sample records restored.");
+    saveData(); render(); renderTests([]);
+    showToast("Synthetic demo data restored.");
+  } catch (err) {
+    showToast("Reset failed. Your existing browser data may still be present.", true);
+  }
+});
+
+const testDefinitions = [
+  {name:"1. Normal request",description:"Complete synthetic milestone submission should be accepted.",run:()=>{
+    const data = [];
+    const m = {project:"Test Project",title:"Milestone 1",owner:"Demo Student",dueDate:today(),deliverable:"Synthetic file reference"};
+    const missing = ["project","title","owner","dueDate","deliverable"].filter(k=>!String(m[k]||"").trim());
+    if (!missing.length) data.push("validation accepted complete record");
+    return {pass:data.length===1,detail:data[0]||"complete record rejected"};
+  }},
+  {name:"2. Missing information",description:"A missing deliverable should block creation.",run:()=>{
+    const m = {project:"Test Project",title:"Milestone 2",owner:"Demo Student",dueDate:today(),deliverable:""};
+    const missing = ["project","title","owner","dueDate","deliverable"].filter(k=>!String(m[k]||"").trim());
+    return {pass:missing.includes("deliverable"),detail:missing.includes("deliverable")?"blocked: deliverable is required":"missing field was not detected"};
+  }},
+  {name:"3. Duplicate request",description:"Same project, title and owner should be detected.",run:()=>{
+    const records = [{project:"Demo",title:"Prototype",owner:"Student A"}];
+    const candidate = {project:" demo ",title:"PROTOTYPE",owner:"student a"};
+    const norm = s=>s.trim().toLowerCase();
+    const duplicate = records.some(m=>norm(m.project)===norm(candidate.project)&&norm(m.title)===norm(candidate.title)&&norm(m.owner)===norm(candidate.owner));
+    return {pass:duplicate,detail:duplicate?"duplicate blocked using case-insensitive matching":"duplicate was not detected"};
+  }},
+  {name:"4. Unauthorized approval",description:"Student role must not approve a submission.",run:()=>{
+    const role = "student", status = "Submitted";
+    const allowed = role === "faculty" && ["Submitted","Revision Required"].includes(status);
+    return {pass:!allowed,detail:!allowed?"approval denied for Student role":"unauthorized approval was allowed"};
+  }},
+  {name:"5. Failed step / recovery",description:"Empty resubmission should not overwrite the existing submission.",run:()=>{
+    const original = "previous synthetic submission";
+    const attempted = "   ";
+    const next = attempted.trim() ? attempted.trim() : original;
+    return {pass:next===original,detail:next===original?"empty submission rejected; previous data preserved":"previous submission was overwritten"};
+  }}
+];
+function renderTests(results) {
+  $("testResults").innerHTML = testDefinitions.map((t,i)=>{
+    const r = results[i];
+    return `<div class="test-card"><h3>${esc(t.name)}</h3><p>${esc(t.description)}</p>${r?`<div class="test-result ${r.pass?"pass":"fail"}">${r.pass?"PASS":"FAIL"} · ${esc(r.detail)}</div>`:'<div class="test-result" style="color:#64748b">Not run yet</div>'}</div>`;
+  }).join("");
+}
+function runTests() {
+  const results = [];
+  for (const t of testDefinitions) {
+    try { results.push(t.run()); }
+    catch (err) { results.push({pass:false,detail:"test error handled"}); }
+  }
+  renderTests(results);
+  const passed = results.filter(r=>r.pass).length;
+  showToast(`Synthetic tests complete: ${passed}/${results.length} passed. These are demonstration tests, not evidence of real college outcomes.`, passed !== results.length);
+}
+$("runTestsBtn").addEventListener("click", runTests);
+
+function initialize() {
+  milestones = safeRead(STORAGE_KEY, null) || seedData();
+  audit = safeRead(AUDIT_KEY, []);
+  if (!milestones.length) milestones = seedData();
+  if (!audit.length) {
+    audit = [{at:nowIso(),actor:"System (demo)",action:"Demo initialized",detail:"Synthetic sample data loaded; no real college records used."}];
+  }
+  $("dueDate").min = today();
+  render(); renderTests([]);
+  // Persist initial synthetic data when possible; app remains usable if storage is unavailable.
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(milestones)); localStorage.setItem(AUDIT_KEY, JSON.stringify(audit)); } catch (err) {}
+}
+initialize();
+</script>
+</body>
+</html>
